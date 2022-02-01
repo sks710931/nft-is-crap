@@ -1,8 +1,8 @@
+import { Home } from "./pages/Home";
+
 function App() {
   return (
-    <div>
-      Soccernft
-    </div>
+    <Home />
   );
 }
 
