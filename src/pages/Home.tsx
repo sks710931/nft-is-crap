@@ -10,7 +10,7 @@ export const Home = () => {
     return (
         <div className={classes.main}>
             <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid item className="top" xs={12}>
                     <div className={classes.center}>
                         <img src={logo} alt="logo" className={classes.logo}/>
                     </div>
@@ -25,14 +25,13 @@ export const Home = () => {
                 </Grid>
                 <Grid item xs={12} md={3}>
                     <div className={classes.center}>
-                        <img src={icons} alt="logo" className={classes.icons}/>
+                        <img src={icons} alt="logo" className={classes.iconsInvert}/>
                     </div>
                 </Grid>
                 <Grid item xs={12}>
                     <div className={classes.center}>
-                        <div className={classes.footer}>Please make sure you are connected to the right network (Polygon Mainnet) and the correct address. Please note: Once you make the purchase, you cannot undone the action.</div>
-                        <div className={classes.footer}>We have set the gas limit to 285000 for the contract to successfully mint your NFT. We recommend that you don't lower the gas limit. Maximum purchase of 20 NFTs per transaction.</div>
-                    </div>
+                        <div className={classes.footer}>Please make sure you are connected to the right network (Ethereum Mainnet) and the correct address. Please note: Once you make the purchase, you cannot undone the action.</div>
+                        </div>
                 </Grid>
             </Grid>
         </div>
@@ -40,11 +39,12 @@ export const Home = () => {
 }
 
 const UseStyle = makeStyles((theme: Theme) =>
-    createStyles({
+   ({
         main: {
             width: '100%',
             minHeight: '100vh',
-            backgroundImage: 'linear-gradient(#36122d, #854575)'
+            backgroundImage: 'linear-gradient(#36122d, #854575)',
+            marginTop: 16
         },
         center: {
             width: '100%', textAlign: 'center'
@@ -62,6 +62,15 @@ const UseStyle = makeStyles((theme: Theme) =>
             borderRadius: '50%',
             marginTop: '40px',
             border: '2px solid black',
+            boxShadow: 'rgba(0, 0, 0, 0.75) 0px 5px 15px;'
+        },
+        iconsInvert:{
+            maxWidth: '260px',
+            height: 'auto',
+            borderRadius: '50%',
+            marginTop: '40px',
+            border: '2px solid black',
+            transform: "scaleX(-1)",
             boxShadow: 'rgba(0, 0, 0, 0.75) 0px 5px 15px;'
         },
         footer: {
