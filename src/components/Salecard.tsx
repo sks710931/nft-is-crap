@@ -6,29 +6,31 @@ import { Connect } from "./Connect";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useWeb3React } from "@web3-react/core";
 import {NFTContract} from "../connectors/address";
-import { Web3Provider } from "@ethersproject/providers";
+import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { Contract } from "@ethersproject/contracts";
 import abi from "../abi/abi.json";
 import { formatUnits } from "@ethersproject/units";
 export const Salecard = () => {
   const [mints, setMints] = useState(0);
-  const { account, library,  } = useWeb3React<Web3Provider>();
+  const { account  } = useWeb3React<Web3Provider>();
+  const [price, setPrice] = useState(0);
 
     useEffect(() => {
         const getMints = async () => {
-            const signer = await library?.getSigner();
-            const contract = new Contract(NFTContract, abi, signer );
+          const provider = new JsonRpcProvider("https://mainnet.infura.io/v3/f152de7d8bb44f88a54e2731691a7efa");
+            const contract = new Contract(NFTContract, abi, provider );
             contract.on("CreateWizardCreature", async () => {
                 const mint2 = await contract.totalSupply();
                 setMints(Number(formatUnits(mint2, 0)));
             });
             const mint1 = await contract.totalSupply();
+            const sp = await contract.salePrice(1);
+            setPrice(Number(formatUnits(sp, "ether")));
             setMints(Number(formatUnits(mint1, 0)));
         }
-        if(account && library){
             getMints();
-        }
-    }, [account, library])
+        
+    }, [])
   const classes = UseStyle();
   return (
     <div className={classes.main}>
@@ -44,7 +46,7 @@ export const Salecard = () => {
           NFT Contract
         </Button>
       </div>
-      <div className={classes.cost}>1 Wizard Creature NFT costs 0.04 ETH.</div>
+      <div className={classes.cost}>1 Wizard Creature NFT costs {price} ETH.</div>
 
      {!account &&  <Connect />}
       {account && <Buy />}
