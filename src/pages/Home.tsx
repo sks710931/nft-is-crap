@@ -1,5 +1,5 @@
 import { Grid, Theme} from '@mui/material';
-import { createStyles, makeStyles } from '@mui/styles';
+import {  makeStyles } from '@mui/styles';
 
 import logo from '../assets/logo.png';
 import icons from '../assets/icons.gif';
@@ -43,7 +43,7 @@ const UseStyle = makeStyles((theme: Theme) =>
         main: {
             width: '100%',
             minHeight: '100vh',
-            backgroundImage: 'linear-gradient(#36122d, #854575)',
+            backgroundImage: 'linear-gradient(#e29a45, #e24b45)',
             marginTop: 16
         },
         center: {
@@ -54,14 +54,16 @@ const UseStyle = makeStyles((theme: Theme) =>
             height: 'auto',
             borderRadius: '50%',
             marginTop: '48px',
-            marginBottom: '40px'
+            marginBottom: '40px',
+            border: '1px solid #a47573',
+            boxShadow: 'rgba(0, 0, 0, 0.75) 0px 5px 15px;'
         },
         icons: {
             maxWidth: '260px',
             height: 'auto',
             borderRadius: '50%',
             marginTop: '40px',
-            border: '2px solid black',
+            border: '1px solid #a47573',
             boxShadow: 'rgba(0, 0, 0, 0.75) 0px 5px 15px;'
         },
         iconsInvert:{
@@ -69,7 +71,7 @@ const UseStyle = makeStyles((theme: Theme) =>
             height: 'auto',
             borderRadius: '50%',
             marginTop: '40px',
-            border: '2px solid black',
+            border: '1px solid #a47573',
             transform: "scaleX(-1)",
             boxShadow: 'rgba(0, 0, 0, 0.75) 0px 5px 15px;'
         },

@@ -11,24 +11,18 @@ import {
 import { createStyles, makeStyles } from "@mui/styles";
 import { useWeb3React } from "@web3-react/core";
 import React, { useState } from "react";
-import { activateInjectedProvider, injectedConnector } from "../connectors/injected-connector";
+import {  injectedConnector } from "../connectors/injected-connector";
 import mm from "../assets/metamask.svg";
-import cb from "../assets/coinbase.png";
-import { walletlink } from "../connectors/walletlink";
 export const Connect = () => {
   const classes = UseStyle();
   const [isOpen, setIsOpen] = useState(false);
-  const { activate, account, deactivate } = useWeb3React();
+  const { activate} = useWeb3React();
   const handleMetamaskClick = () => {
-      activateInjectedProvider("MetaMask");
       activate(injectedConnector);
       setIsOpen(false);
   }
 
-  const handleCoinbaseClick = () => {
-    activate(walletlink);
-    setIsOpen(false);
-}
+  
   return (
     <>
       <div className={classes.title}>Connect to the Ethereum Network.</div>
@@ -56,22 +50,13 @@ export const Connect = () => {
             alignItems="center"
           >
             <Button
-              startIcon={<img src={mm} width={40} />}
+              startIcon={<img src={mm} alt="Metamask" width={40} />}
               className={classes.btn}
               fullWidth
               variant="text"
               onClick={handleMetamaskClick}
             >
               Metamask
-            </Button>
-            <Button
-              startIcon={<img src={cb} width={35} />}
-              className={classes.btn}
-              fullWidth
-              variant="text"
-              onClick={handleCoinbaseClick}
-            >
-              Coinbase
             </Button>
           </Box>
         </DialogContent>

@@ -17,9 +17,9 @@ export const Salecard = () => {
 
     useEffect(() => {
         const getMints = async () => {
-          const provider = new JsonRpcProvider("https://mainnet.infura.io/v3/f152de7d8bb44f88a54e2731691a7efa");
+          const provider = new JsonRpcProvider("https://goerli.infura.io/v3/749bb12c1a35410686d0a338b91313fa");
             const contract = new Contract(NFTContract, abi, provider );
-            contract.on("CreateWizardCreature", async () => {
+            contract.on("CreateBoredLionApe", async () => {
                 const mint2 = await contract.totalSupply();
                 setMints(Number(formatUnits(mint2, 0)));
             });
@@ -46,7 +46,7 @@ export const Salecard = () => {
           NFT Contract
         </Button>
       </div>
-      <div className={classes.cost}>1 Wizard Creature NFT costs {price} ETH.</div>
+      <div className={classes.cost}>1 Bored Lion Ape NFT costs {price} ETH.</div>
 
      {!account &&  <Connect />}
       {account && <Buy />}

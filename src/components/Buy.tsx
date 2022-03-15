@@ -8,7 +8,6 @@ import { Contract } from "@ethersproject/contracts";
 import { NFTContract } from "../connectors/address";
 import abi from "../abi/abi.json";
 import { formatUnits, parseUnits } from "@ethersproject/units";
-import { json } from "stream/consumers";
 
 export const Buy = () => {
   const classes = UseStyle();
@@ -16,6 +15,7 @@ export const Buy = () => {
   const [isWhitelisted, setWhitelisted] = useState(false);
   const [salePrice, setSalePrice] = useState(0);
   const [presalePrice, setPresalePrice] = useState(0);
+  const [preSaleOpen, setPresaleOpen] = useState(true);
   const { account, library } = useWeb3React();
 
   const getSalePriceValue = () => {
@@ -30,14 +30,14 @@ export const Buy = () => {
     if (account && library) {
       try {
         const signer = await library.getSigner();
-        if (isWhitelisted) {
+        if (isWhitelisted && preSaleOpen) {
           const contract = new Contract(NFTContract, abi, signer);
           let overRides = {
             value: parseUnits(getPreSalePriceValue(), "ether"),
           };
           const txResult = await contract.presaleMint(value, overRides);
           await txResult.wait();
-          alert(`${value} Wizard creature NFT's minted successfully!`);
+          alert(`${value} Bored Lion Ape NFT's minted successfully!`);
         } else {
           const contract = new Contract(NFTContract, abi, signer);
           let overRides = {
@@ -45,14 +45,20 @@ export const Buy = () => {
           };
           const txResult = await contract.mint(value, overRides);
           await txResult.wait();
-          alert(`${value} Wizard creature NFT's minted successfully!`);
+          alert(`${value} Bored Lion Ape NFT's minted successfully!`);
         }
       } catch (err: any) {
-        console.log(JSON.stringify(err));
         if (err.error) {
-          alert(err.error.message);
+          if (err.code === "INSUFFICIENT_FUNDS") {
+            alert("Insufficient Funds");
+          } else {
+            alert(err.error.message);
+            console.log(err.code);
+          }
         } else {
-          alert("Transaction Error");
+          if (err.code === 4001) {
+            alert("User denied transaction signature.");
+          } else alert("Transaction Error");
         }
       }
     }
@@ -65,9 +71,11 @@ export const Buy = () => {
       const wls = await contract.addressInWhitelist(account);
       const pp = await contract.presalePrice(1);
       const sp = await contract.salePrice(1);
+      const isPreOpen = await contract.isPresaleOpen();
       setSalePrice(Number(formatUnits(sp, "ether")));
       setPresalePrice(Number(formatUnits(pp, "ether")));
       setWhitelisted(wls);
+      setPresaleOpen(isPreOpen);
     };
     if (account && library) {
       getMints();
@@ -135,7 +143,7 @@ export const Buy = () => {
           variant="contained"
         >
           {" "}
-          Mint Wizard Creature
+          Mint Bored Lion Ape
         </Button>
       </div>
     </>
