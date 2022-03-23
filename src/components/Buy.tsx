@@ -98,7 +98,7 @@ export const Buy = () => {
         <span>
           <b>Your Address : </b>
           {account}{" "}
-          {isWhitelisted && <Chip label={isWhitelisted ? "Whitelisted" : ""} />}
+          {isWhitelisted && <Chip color="success" label={isWhitelisted ? "Whitelisted" : ""} />}
         </span>
       </div>
       <div className={classes.title}>Click buy to mint your NFT.</div>

@@ -60,7 +60,6 @@ const UseStyle = makeStyles((theme: Theme) =>
       backgroundColor: "#ffffff",
       borderRadius: "16px",
       minHeight: "360px",
-      border: "2px solid black",
       boxShadow: "rgba(0, 0, 0, 0.75) 0px 5px 15px;",
     },
     title: {
