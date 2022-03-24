@@ -17,7 +17,7 @@ export const Salecard = () => {
 
     useEffect(() => {
         const getMints = async () => {
-          const provider = new JsonRpcProvider("https://goerli.infura.io/v3/749bb12c1a35410686d0a338b91313fa");
+          const provider = new JsonRpcProvider("https://mainnet.infura.io/v3/749bb12c1a35410686d0a338b91313fa");
             const contract = new Contract(NFTContract, abi, provider );
             contract.on("CreateBoredLionApe", async () => {
                 const mint2 = await contract.totalSupply();
