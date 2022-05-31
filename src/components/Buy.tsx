@@ -37,7 +37,7 @@ export const Buy = () => {
           };
           const txResult = await contract.presaleMint(value, overRides);
           await txResult.wait();
-          alert(`${value} Bored Lion Ape NFT's minted successfully!`);
+          alert(`${value} Zaidan Clan NFT's minted successfully!`);
         } else {
           const contract = new Contract(NFTContract, abi, signer);
           let overRides = {
@@ -45,14 +45,14 @@ export const Buy = () => {
           };
           const txResult = await contract.mint(value, overRides);
           await txResult.wait();
-          alert(`${value} Bored Lion Ape NFT's minted successfully!`);
+          alert(`${value} Zaidan Clan NFT's minted successfully!`);
         }
       } catch (err: any) {
-        if (err.error) {
-          if (err.code === "INSUFFICIENT_FUNDS") {
+        if (err.data) {
+          if (err.data.code === -32000) {
             alert("Insufficient Funds");
           } else {
-            alert(err.error.message);
+            alert(err.data.message);
             console.log(err.code);
           }
         } else {
@@ -82,8 +82,14 @@ export const Buy = () => {
     }
   }, [account, library]);
   const increment = () => {
-    if (value < 5) {
-      setValue((value) => value + 1);
+    if(preSaleOpen){
+      if (value < 2) {
+        setValue((value) => value + 1);
+      }
+    }else{
+      if (value < 5) {
+        setValue((value) => value + 1);
+      }
     }
   };
 
@@ -143,7 +149,7 @@ export const Buy = () => {
           variant="contained"
         >
           {" "}
-          Mint Bored Lion Ape
+          Mint Zaidan Clan NFT
         </Button>
       </div>
     </>

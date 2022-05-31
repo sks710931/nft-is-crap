@@ -5,7 +5,7 @@ import { Buy } from "./Buy";
 import { Connect } from "./Connect";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useWeb3React } from "@web3-react/core";
-import {NFTContract} from "../connectors/address";
+import {NFTContract, rpc} from "../connectors/address";
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { Contract } from "@ethersproject/contracts";
 import abi from "../abi/abi.json";
@@ -17,9 +17,9 @@ export const Salecard = () => {
 
     useEffect(() => {
         const getMints = async () => {
-          const provider = new JsonRpcProvider("https://mainnet.infura.io/v3/749bb12c1a35410686d0a338b91313fa");
+          const provider = new JsonRpcProvider(rpc);
             const contract = new Contract(NFTContract, abi, provider );
-            contract.on("CreateBoredLionApe", async () => {
+            contract.on("CreateZaidanClanNFT", async () => {
                 const mint2 = await contract.totalSupply();
                 setMints(Number(formatUnits(mint2, 0)));
             });
@@ -34,19 +34,19 @@ export const Salecard = () => {
   const classes = UseStyle();
   return (
     <div className={classes.main}>
-      <div className={classes.title}>{mints} / 10000</div>
+      <div className={classes.title}>{mints} / 5500</div>
       <div className={classes.address}>
         <Button
           className={classes.contractButton}
           variant="text"
           color="primary"
           endIcon={<OpenInNewIcon />}
-          onClick={() => window.open(`https://etherscan.io/token/${NFTContract}`, "_blank")}
+          onClick={() => window.open(`https://snowtrace.io/token/${NFTContract}`, "_blank")}
         >
           NFT Contract
         </Button>
       </div>
-      <div className={classes.cost}>1 Bored Lion Ape NFT costs {price} ETH.</div>
+      <div className={classes.cost}>1 Zaidan Clan NFT costs {price} AVAX.</div>
 
      {!account &&  <Connect />}
       {account && <Buy />}

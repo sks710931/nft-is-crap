@@ -1,1 +1,2 @@
-export const NFTContract = "0x06C5f612eEC13d29caA3dCD369FD3e7EC22E8eeC";
+export const NFTContract = "0x66F489CD4fcB30B3E08586fb616DCFD3baffec18";
+export const rpc = "https://api.avax-test.network/ext/bc/C/rpc";
