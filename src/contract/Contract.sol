@@ -1,3 +1,7 @@
+/**
+ *Submitted for verification at snowtrace.io on 2022-06-03
+*/
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
@@ -1007,25 +1011,24 @@ abstract contract Ownable is Context {
     }
 }
 
-contract BoredLionApesNFT is ERC721Enumerable, Ownable {
+contract ZaidanNFT is ERC721Enumerable, Ownable {
     using SafeMath for uint256;
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdTracker;
 
-    uint256 public constant MAX_ELEMENTS = 10000;
-    uint256 public constant MAX_BY_PRESALE = 5000;
-    uint256 public PRICE = 2 * 10**17; // 0.20 ETH
-    uint256 public PRESALE_PRICE = 15 * 10**16; //0.15 ETH
-    uint256 public constant MAX_BY_MINT = 7;
-    uint256 public constant MAX_BY_MINT_WHITELIST = 7;
-    uint256 public constant MAX_WALLET = 14;
+    uint256 public constant MAX_ELEMENTS = 5500;
+    uint256 public PRICE = 4700000000000000000; // 4.7 AVAX 
+    uint256 public PRESALE_PRICE = 2850000000000000000; //2.85 AVAX
+    uint256 public constant MAX_BY_MINT_WHITELIST = 2;
+    uint256 public constant MAX_BY_MINT = 6;
+    uint256 public constant MAX_BY_MINT_POST_24_HRS = 10;
     uint256 public MAX_RESERVE_COUNT = 300;
-    uint256 public SALE_START = 1651708800; //Thursday, May 05, 2022, 00:00:00 GMT
-    uint256 public PRESALE_START = 1651190400; // Friday, April 29, 2022, 00:00:00 GMT
-
+    uint256 public SALE_START = 1662688800; // September 9, 2022, 02:00:00 GMT
+    uint256 public PRESALE_START = 1662602400; // September 8, 2022, 02:00:00 GMT
+    uint256 public secondsInDay = 60 * 60 * 24;
+    address public _multisig = 0xFb16412cC5522F8214Da686375f5D46030028D51;
     bool public isPaused = false;
-    bool public isRevealed = false;
 
     mapping(address => bool) private _whiteList;
     mapping(address => uint256) private _whiteListClaimed;
@@ -1033,13 +1036,11 @@ contract BoredLionApesNFT is ERC721Enumerable, Ownable {
     uint256 private _reservedCount = 0;
     uint256 private _reserveAtATime = 50;
 
-    string private notRevealedtokenUri =
-        "https://ipfs.io/ipfs/QmYbSSWJQ31QZiwfS6SnNvVMU7gpiSZf1DU1btaR4q2vbt";
     string public baseTokenURI;
 
-    event CreateBoredLionApe(uint256 indexed id);
+    event CreateZaidanClanNFT(uint256 indexed id);
 
-    constructor(string memory baseURI) ERC721("Bored Lion Apes", "BLA") {
+    constructor(string memory baseURI) ERC721("Zaidan Clan NFT", "ZCN") {
         setBaseURI(baseURI);
         _tokenIdTracker.increment();
     }
@@ -1086,42 +1087,48 @@ contract BoredLionApesNFT is ERC721Enumerable, Ownable {
     }
 
     function mint(uint256 _count) public payable saleIsOpen {
-        uint256 total = _totalSupply();
+        uint256 total = _tokenIdTracker.current().sub(1);
         require(total + _count <= MAX_ELEMENTS, "Max limit");
-        require(total <= MAX_ELEMENTS, "All Bored Lion Ape NFT's are sold out");
-        require(_count <= MAX_BY_MINT, "Exceeds allowed NFT's per transaction");
+        require(total <= MAX_ELEMENTS, "All Zaidan Clan NFT's are sold out");
         require(!isPaused, "Sale is Paused.");
-        require(
-            _generalClaimed[_msgSender()] + _count <= MAX_BY_MINT,
-            "Exceeds your minting quota."
-        );
-        require(
-            balanceOf(_msgSender()) + _count <= MAX_WALLET,
-            "Exceeds NFT's allowed per wallet"
-        );
+        if (block.timestamp.sub(SALE_START) <= secondsInDay) {
+            require(
+                _count <= MAX_BY_MINT,
+                "Exceeds allowed NFT's per transaction"
+            );
+            require(
+                _generalClaimed[_msgSender()] + _count <= MAX_BY_MINT,
+                "Exceeds your minting quota."
+            );
+        } else {
+            require(
+                _count <= MAX_BY_MINT_POST_24_HRS,
+                "Exceeds allowed NFT's per transaction"
+            );
+        }
+
         require(msg.value >= salePrice(_count), "Value below price");
 
         for (uint256 i = 0; i < _count; i++) {
             _generalClaimed[_msgSender()] += 1;
             _mintAnElement(_msgSender());
         }
-        _withdraw(owner(), address(this).balance);
+        _withdraw(_multisig, address(this).balance);
     }
 
     function presaleMint(uint256 _count) public payable preSaleIsOpen {
         require(_whiteList[msg.sender], "You are not in whitelist");
-        require(_count <= MAX_BY_MINT_WHITELIST, "Incorrect amount to claim");
+        require(
+            _count <= MAX_BY_MINT_WHITELIST,
+            "Maximum of 2 allowed per transaction."
+        );
         require(
             _whiteListClaimed[msg.sender] + _count <= MAX_BY_MINT_WHITELIST,
             "Purchase exceeds max allowed"
         );
-        require(
-            balanceOf(_msgSender()) + _count <= MAX_WALLET,
-            "Exceeds NFT's allowed per wallet"
-        );
-        uint256 total = _totalSupply();
-        require(total + _count <= MAX_BY_PRESALE, "Max presale limit");
-        require(total <= MAX_BY_PRESALE, "All presale Bored Lion Ape NFT's are sold out");
+        uint256 total = _tokenIdTracker.current().sub(1);
+        require(total + _count <= MAX_ELEMENTS, "Max limit");
+        require(total <= MAX_ELEMENTS, "All Zaidan Clan NFT's are sold out");
         require(msg.value >= presalePrice(_count), "Value below price");
         require(!isPaused, "Sale is Paused.");
 
@@ -1129,11 +1136,11 @@ contract BoredLionApesNFT is ERC721Enumerable, Ownable {
             _whiteListClaimed[msg.sender] += 1;
             _mintAnElement(msg.sender);
         }
-        _withdraw(owner(), address(this).balance);
+        _withdraw(_multisig, address(this).balance);
     }
 
     function airdropNFT(address[] memory winners) public onlyOwner {
-        uint256 total = _totalSupply();
+        uint256 total = _tokenIdTracker.current().sub(1);
         require(total + winners.length <= MAX_ELEMENTS, "Max limit");
         require(
             winners.length > 0,
@@ -1148,11 +1155,7 @@ contract BoredLionApesNFT is ERC721Enumerable, Ownable {
         uint256 id = _totalSupply();
         _tokenIdTracker.increment();
         _safeMint(_to, id);
-        emit CreateBoredLionApe(id);
-    }
-
-    function revealCollection() external onlyOwner {
-        isRevealed = true;
+        emit CreateZaidanClanNFT(id);
     }
 
     function salePrice(uint256 _count) public view returns (uint256) {
@@ -1186,8 +1189,8 @@ contract BoredLionApesNFT is ERC721Enumerable, Ownable {
         uint256 metaId = tokenId;
         string memory uriSuffix = ".json";
         string memory currentBaseURI = _baseURI();
-        if(isRevealed){
-            return
+
+        return
             bytes(currentBaseURI).length > 0
                 ? string(
                     abi.encodePacked(
@@ -1197,10 +1200,6 @@ contract BoredLionApesNFT is ERC721Enumerable, Ownable {
                     )
                 )
                 : "";
-        }
-        else {
-            return string(abi.encodePacked(notRevealedtokenUri));
-        }
     }
 
     function walletOfOwner(address _owner)
@@ -1279,7 +1278,7 @@ contract BoredLionApesNFT is ERC721Enumerable, Ownable {
     function withdrawAll() external onlyOwner {
         uint256 balance = address(this).balance;
         require(balance > 0);
-        _withdraw(owner(), balance);
+        _withdraw(_multisig, balance);
     }
 
     function _withdraw(address _address, uint256 _amount) private {

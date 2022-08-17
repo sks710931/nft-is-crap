@@ -46,7 +46,9 @@ export const Salecard = () => {
           NFT Contract
         </Button>
       </div>
-      <div className={classes.cost}>1 Zaidan Clan NFT costs {price} AVAX.</div>
+      <div className={classes.cost}>1 Zaidan Clan NFT costs:</div>
+      <div className={classes.subCost}>$80 in $AVAX for WL spots (Maximum 2 per wallet)</div>
+      <div className={classes.subCost}>$120 in $AVAX for Public Mint</div>
 
      {!account &&  <Connect />}
       {account && <Buy />}
@@ -74,6 +76,10 @@ const UseStyle = makeStyles((theme: Theme) =>
       fontSize: "16px",
       textAlign: "center",
       textTransform: "capitalize",
+    },
+    subCost:{
+      textAlign: "center",
+      fontSize: "0.8em",
     },
     cost: {
       paddingTop: "24px",
