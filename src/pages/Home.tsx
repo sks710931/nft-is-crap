@@ -31,7 +31,7 @@ export const Home = () => {
                 <Grid item xs={12}>
                     <div className={classes.center}>
                         <div className={classes.footer}>
-Please note: All purchases are final and cannot be undone once completed. Please make sure you are connected to the right network (Ethereum Mainnet) and the correct address. Please note: Once you make the purchase, you cannot undone the action.</div>
+Please note: All purchases are final and cannot be undone once completed. Please make sure you are connected to the right network (Ethereum Mainnet) and the correct address.</div>
                         </div>
                 </Grid>
             </Grid>
