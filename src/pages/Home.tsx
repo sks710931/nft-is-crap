@@ -30,7 +30,7 @@ export const Home = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <div className={classes.center}>
-                        <div className={classes.footer}>Please make sure you are connected to the right network (Avalanche Mainnet) and the correct address. Please note: Once you make the purchase, you cannot undone the action.</div>
+                        <div className={classes.footer}>Please make sure you are connected to the right network (Ethereum Mainnet) and the correct address. Please note: Once you make the purchase, you cannot undone the action.</div>
                         </div>
                 </Grid>
             </Grid>
@@ -43,7 +43,7 @@ const UseStyle = makeStyles((theme: Theme) =>
         main: {
             width: '100%',
             minHeight: '100vh',
-            backgroundImage: 'radial-gradient(#ff0,#ff9600);',
+            backgroundImage: 'radial-gradient(#ff0,#9f331e);',
             marginTop: 16
         },
         center: {

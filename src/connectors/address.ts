@@ -1,2 +1,2 @@
-export const NFTContract = "0xdfB00e816bC17f46f90aeD507f9e36C3C1db1f53";
-export const rpc = "https://api.avax.network/ext/bc/C/rpc";
+export const NFTContract = "0x09161d23B774945993Ab9Ec7641beF962084020f";
+export const rpc = "https://rinkeby.infura.io/v3/12351ae7b81b4899bf671dfc4f732b16";

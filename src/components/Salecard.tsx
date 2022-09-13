@@ -19,7 +19,7 @@ export const Salecard = () => {
         const getMints = async () => {
           const provider = new JsonRpcProvider(rpc);
             const contract = new Contract(NFTContract, abi, provider );
-            contract.on("CreateZaidanClanNFT", async () => {
+            contract.on("CreateCrapNFT", async () => {
                 const mint2 = await contract.totalSupply();
                 setMints(Number(formatUnits(mint2, 0)));
             });
@@ -34,7 +34,7 @@ export const Salecard = () => {
   const classes = UseStyle();
   return (
     <div className={classes.main}>
-      <div className={classes.title}>{mints} / 5500</div>
+      <div className={classes.title}>{mints} / 10000</div>
       <div className={classes.address}>
         <Button
           className={classes.contractButton}
@@ -46,9 +46,7 @@ export const Salecard = () => {
           NFT Contract
         </Button>
       </div>
-      <div className={classes.cost}>1 Zaidan Clan NFT costs:</div>
-      <div className={classes.subCost}>$80 in $AVAX for WL spots (Maximum 2 per wallet)</div>
-      <div className={classes.subCost}>$120 in $AVAX for Public Mint</div>
+      <div className={classes.cost}>{`1 ThisNFTisCrap costs ${price} ETH`}</div>
 
      {!account &&  <Connect />}
       {account && <Buy />}

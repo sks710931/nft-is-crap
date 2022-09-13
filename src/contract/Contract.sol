@@ -1,416 +1,9 @@
-/**
- *Submitted for verification at snowtrace.io on 2022-06-03
-*/
-
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.10;
+pragma solidity 0.8.10;
 
-library SafeMath {
-    function tryAdd(uint256 a, uint256 b)
-        internal
-        pure
-        returns (bool, uint256)
-    {
-        unchecked {
-            uint256 c = a + b;
-            if (c < a) return (false, 0);
-            return (true, c);
-        }
-    }
-
-    function trySub(uint256 a, uint256 b)
-        internal
-        pure
-        returns (bool, uint256)
-    {
-        unchecked {
-            if (b > a) return (false, 0);
-            return (true, a - b);
-        }
-    }
-
-    function tryMul(uint256 a, uint256 b)
-        internal
-        pure
-        returns (bool, uint256)
-    {
-        unchecked {
-            // Gas optimization: this is cheaper than requiring 'a' not being zero, but the
-            // benefit is lost if 'b' is also tested.
-            // See: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/522
-            if (a == 0) return (true, 0);
-            uint256 c = a * b;
-            if (c / a != b) return (false, 0);
-            return (true, c);
-        }
-    }
-
-    function tryDiv(uint256 a, uint256 b)
-        internal
-        pure
-        returns (bool, uint256)
-    {
-        unchecked {
-            if (b == 0) return (false, 0);
-            return (true, a / b);
-        }
-    }
-
-    function tryMod(uint256 a, uint256 b)
-        internal
-        pure
-        returns (bool, uint256)
-    {
-        unchecked {
-            if (b == 0) return (false, 0);
-            return (true, a % b);
-        }
-    }
-
-    function add(uint256 a, uint256 b) internal pure returns (uint256) {
-        return a + b;
-    }
-
-    function sub(uint256 a, uint256 b) internal pure returns (uint256) {
-        return a - b;
-    }
-
-    function mul(uint256 a, uint256 b) internal pure returns (uint256) {
-        return a * b;
-    }
-
-    function div(uint256 a, uint256 b) internal pure returns (uint256) {
-        return a / b;
-    }
-
-    function mod(uint256 a, uint256 b) internal pure returns (uint256) {
-        return a % b;
-    }
-
-    function sub(
-        uint256 a,
-        uint256 b,
-        string memory errorMessage
-    ) internal pure returns (uint256) {
-        unchecked {
-            require(b <= a, errorMessage);
-            return a - b;
-        }
-    }
-
-    function div(
-        uint256 a,
-        uint256 b,
-        string memory errorMessage
-    ) internal pure returns (uint256) {
-        unchecked {
-            require(b > 0, errorMessage);
-            return a / b;
-        }
-    }
-
-    function mod(
-        uint256 a,
-        uint256 b,
-        string memory errorMessage
-    ) internal pure returns (uint256) {
-        unchecked {
-            require(b > 0, errorMessage);
-            return a % b;
-        }
-    }
-}
-
-library Counters {
-    struct Counter {
-        uint256 _value; // default: 0
-    }
-
-    function current(Counter storage counter) internal view returns (uint256) {
-        return counter._value;
-    }
-
-    function increment(Counter storage counter) internal {
-        unchecked {
-            counter._value += 1;
-        }
-    }
-
-    function decrement(Counter storage counter) internal {
-        uint256 value = counter._value;
-        require(value > 0, "Counter: decrement overflow");
-        unchecked {
-            counter._value = value - 1;
-        }
-    }
-
-    function reset(Counter storage counter) internal {
-        counter._value = 0;
-    }
-}
-
-interface IERC20 {
-    function totalSupply() external view returns (uint256);
-
-    function balanceOf(address account) external view returns (uint256);
-
-    function transfer(address recipient, uint256 amount)
-        external
-        returns (bool);
-
-    function allowance(address owner, address spender)
-        external
-        view
-        returns (uint256);
-
-    function approve(address spender, uint256 amount) external returns (bool);
-
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint256 amount
-    ) external returns (bool);
-
-    event Transfer(address indexed from, address indexed to, uint256 value);
-
-    event Approval(
-        address indexed owner,
-        address indexed spender,
-        uint256 value
-    );
-}
-
-interface IERC165 {
-    function supportsInterface(bytes4 interfaceId) external view returns (bool);
-}
-
-interface IERC721 is IERC165 {
-    event Transfer(
-        address indexed from,
-        address indexed to,
-        uint256 indexed tokenId
-    );
-
-    event Approval(
-        address indexed owner,
-        address indexed approved,
-        uint256 indexed tokenId
-    );
-
-    event ApprovalForAll(
-        address indexed owner,
-        address indexed operator,
-        bool approved
-    );
-
-    function balanceOf(address owner) external view returns (uint256 balance);
-
-    function ownerOf(uint256 tokenId) external view returns (address owner);
-
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 tokenId
-    ) external;
-
-    function transferFrom(
-        address from,
-        address to,
-        uint256 tokenId
-    ) external;
-
-    function approve(address to, uint256 tokenId) external;
-
-    function getApproved(uint256 tokenId)
-        external
-        view
-        returns (address operator);
-
-    function setApprovalForAll(address operator, bool _approved) external;
-
-    function isApprovedForAll(address owner, address operator)
-        external
-        view
-        returns (bool);
-
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 tokenId,
-        bytes calldata data
-    ) external;
-}
-
-interface IERC721Receiver {
-    function onERC721Received(
-        address operator,
-        address from,
-        uint256 tokenId,
-        bytes calldata data
-    ) external returns (bytes4);
-}
-
-interface IERC721Metadata is IERC721 {
-    function name() external view returns (string memory);
-
-    function symbol() external view returns (string memory);
-
-    function tokenURI(uint256 tokenId) external view returns (string memory);
-}
-
-library Address {
-    function isContract(address account) internal view returns (bool) {
-        // This method relies on extcodesize, which returns 0 for contracts in
-        // construction, since the code is only stored at the end of the
-        // constructor execution.
-
-        uint256 size;
-        assembly {
-            size := extcodesize(account)
-        }
-        return size > 0;
-    }
-
-    function sendValue(address payable recipient, uint256 amount) internal {
-        require(
-            address(this).balance >= amount,
-            "Address: insufficient balance"
-        );
-
-        (bool success, ) = recipient.call{value: amount}("");
-        require(
-            success,
-            "Address: unable to send value, recipient may have reverted"
-        );
-    }
-
-    function functionCall(address target, bytes memory data)
-        internal
-        returns (bytes memory)
-    {
-        return functionCall(target, data, "Address: low-level call failed");
-    }
-
-    function functionCall(
-        address target,
-        bytes memory data,
-        string memory errorMessage
-    ) internal returns (bytes memory) {
-        return functionCallWithValue(target, data, 0, errorMessage);
-    }
-
-    function functionCallWithValue(
-        address target,
-        bytes memory data,
-        uint256 value
-    ) internal returns (bytes memory) {
-        return
-            functionCallWithValue(
-                target,
-                data,
-                value,
-                "Address: low-level call with value failed"
-            );
-    }
-
-    function functionCallWithValue(
-        address target,
-        bytes memory data,
-        uint256 value,
-        string memory errorMessage
-    ) internal returns (bytes memory) {
-        require(
-            address(this).balance >= value,
-            "Address: insufficient balance for call"
-        );
-        require(isContract(target), "Address: call to non-contract");
-
-        (bool success, bytes memory returndata) = target.call{value: value}(
-            data
-        );
-        return verifyCallResult(success, returndata, errorMessage);
-    }
-
-    function functionStaticCall(address target, bytes memory data)
-        internal
-        view
-        returns (bytes memory)
-    {
-        return
-            functionStaticCall(
-                target,
-                data,
-                "Address: low-level static call failed"
-            );
-    }
-
-    function functionStaticCall(
-        address target,
-        bytes memory data,
-        string memory errorMessage
-    ) internal view returns (bytes memory) {
-        require(isContract(target), "Address: static call to non-contract");
-
-        (bool success, bytes memory returndata) = target.staticcall(data);
-        return verifyCallResult(success, returndata, errorMessage);
-    }
-
-    function functionDelegateCall(address target, bytes memory data)
-        internal
-        returns (bytes memory)
-    {
-        return
-            functionDelegateCall(
-                target,
-                data,
-                "Address: low-level delegate call failed"
-            );
-    }
-
-    function functionDelegateCall(
-        address target,
-        bytes memory data,
-        string memory errorMessage
-    ) internal returns (bytes memory) {
-        require(isContract(target), "Address: delegate call to non-contract");
-
-        (bool success, bytes memory returndata) = target.delegatecall(data);
-        return verifyCallResult(success, returndata, errorMessage);
-    }
-
-    function verifyCallResult(
-        bool success,
-        bytes memory returndata,
-        string memory errorMessage
-    ) internal pure returns (bytes memory) {
-        if (success) {
-            return returndata;
-        } else {
-            // Look for revert reason and bubble it up if present
-            if (returndata.length > 0) {
-                // The easiest way to bubble the revert reason is using memory via assembly
-
-                assembly {
-                    let returndata_size := mload(returndata)
-                    revert(add(32, returndata), returndata_size)
-                }
-            } else {
-                revert(errorMessage);
-            }
-        }
-    }
-}
-
-abstract contract Context {
-    function _msgSender() internal view virtual returns (address) {
-        return msg.sender;
-    }
-
-    function _msgData() internal view virtual returns (bytes calldata) {
-        return msg.data;
-    }
-}
-
+/**
+ * @dev String operations.
+ */
 library Strings {
     bytes16 private constant _HEX_SYMBOLS = "0123456789abcdef";
 
@@ -438,43 +31,354 @@ library Strings {
         }
         return string(buffer);
     }
+}
 
+library Address {
     /**
-     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation.
+     * @dev Returns true if `account` is a contract.
+     *
+     * [IMPORTANT]
+     * ====
+     * It is unsafe to assume that an address for which this function returns
+     * false is an externally-owned account (EOA) and not a contract.
+     *
+     * Among others, `isContract` will return false for the following
+     * types of addresses:
+     *
+     *  - an externally-owned account
+     *  - a contract in construction
+     *  - an address where a contract will be created
+     *  - an address where a contract lived, but was destroyed
+     * ====
+     *
+     * [IMPORTANT]
+     * ====
+     * You shouldn't rely on `isContract` to protect against flash loan attacks!
+     *
+     * Preventing calls from contracts is highly discouraged. It breaks composability, breaks support for smart wallets
+     * like Gnosis Safe, and does not provide security since it can be circumvented by calling from a contract
+     * constructor.
+     * ====
      */
-    function toHexString(uint256 value) internal pure returns (string memory) {
-        if (value == 0) {
-            return "0x00";
-        }
-        uint256 temp = value;
-        uint256 length = 0;
-        while (temp != 0) {
-            length++;
-            temp >>= 8;
-        }
-        return toHexString(value, length);
-    }
+    function isContract(address account) internal view returns (bool) {
+        // This method relies on extcodesize/address.code.length, which returns 0
+        // for contracts in construction, since the code is only stored at the end
+        // of the constructor execution.
 
-    /**
-     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation with fixed length.
-     */
-    function toHexString(uint256 value, uint256 length)
-        internal
-        pure
-        returns (string memory)
-    {
-        bytes memory buffer = new bytes(2 * length + 2);
-        buffer[0] = "0";
-        buffer[1] = "x";
-        for (uint256 i = 2 * length + 1; i > 1; --i) {
-            buffer[i] = _HEX_SYMBOLS[value & 0xf];
-            value >>= 4;
-        }
-        require(value == 0, "Strings: hex length insufficient");
-        return string(buffer);
+        return account.code.length > 0;
     }
 }
 
+library SafeMath {
+    /**
+     * @dev Returns the subtraction of two unsigned integers, reverting on
+     * overflow (when the result is negative).
+     *
+     * Counterpart to Solidity's `-` operator.
+     *
+     * Requirements:
+     *
+     * - Subtraction cannot overflow.
+     */
+    function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+        return a - b;
+    }
+
+    /**
+     * @dev Returns the multiplication of two unsigned integers, reverting on
+     * overflow.
+     *
+     * Counterpart to Solidity's `*` operator.
+     *
+     * Requirements:
+     *
+     * - Multiplication cannot overflow.
+     */
+    function mul(uint256 a, uint256 b) internal pure returns (uint256) {
+        return a * b;
+    }
+
+    /**
+     * @dev Returns the integer division of two unsigned integers, reverting on
+     * division by zero. The result is rounded towards zero.
+     *
+     * Counterpart to Solidity's `/` operator.
+     *
+     * Requirements:
+     *
+     * - The divisor cannot be zero.
+     */
+    function div(uint256 a, uint256 b) internal pure returns (uint256) {
+        return a / b;
+    }
+}
+
+library Counters {
+    struct Counter {
+        uint256 _value; // default: 0
+    }
+
+    function current(Counter storage counter) internal view returns (uint256) {
+        return counter._value;
+    }
+
+    function increment(Counter storage counter) internal {
+        unchecked {
+            counter._value += 1;
+        }
+    }
+}
+
+/**
+ * @dev Interface of the ERC165 standard, as defined in the
+ * https://eips.ethereum.org/EIPS/eip-165[EIP].
+ *
+ * Implementers can declare support of contract interfaces, which can then be
+ * queried by others ({ERC165Checker}).
+ *
+ * For an implementation, see {ERC165}.
+ */
+interface IERC165 {
+    /**
+     * @dev Returns true if this contract implements the interface defined by
+     * `interfaceId`. See the corresponding
+     * https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[EIP section]
+     * to learn more about how these ids are created.
+     *
+     * This function call must use less than 30 000 gas.
+     */
+    function supportsInterface(bytes4 interfaceId) external view returns (bool);
+}
+
+/**
+ * @dev Required interface of an ERC721 compliant contract.
+ */
+interface IERC721 is IERC165 {
+    /**
+     * @dev Emitted when `tokenId` token is transferred from `from` to `to`.
+     */
+    event Transfer(
+        address indexed from,
+        address indexed to,
+        uint256 indexed tokenId
+    );
+
+    /**
+     * @dev Emitted when `owner` enables `approved` to manage the `tokenId` token.
+     */
+    event Approval(
+        address indexed owner,
+        address indexed approved,
+        uint256 indexed tokenId
+    );
+
+    /**
+     * @dev Emitted when `owner` enables or disables (`approved`) `operator` to manage all of its assets.
+     */
+    event ApprovalForAll(
+        address indexed owner,
+        address indexed operator,
+        bool approved
+    );
+
+    /**
+     * @dev Returns the number of tokens in ``owner``'s account.
+     */
+    function balanceOf(address owner) external view returns (uint256 balance);
+
+    /**
+     * @dev Returns the owner of the `tokenId` token.
+     *
+     * Requirements:
+     *
+     * - `tokenId` must exist.
+     */
+    function ownerOf(uint256 tokenId) external view returns (address owner);
+
+    /**
+     * @dev Safely transfers `tokenId` token from `from` to `to`.
+     *
+     * Requirements:
+     *
+     * - `from` cannot be the zero address.
+     * - `to` cannot be the zero address.
+     * - `tokenId` token must exist and be owned by `from`.
+     * - If the caller is not `from`, it must be approved to move this token by either {approve} or {setApprovalForAll}.
+     * - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer.
+     *
+     * Emits a {Transfer} event.
+     */
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId,
+        bytes calldata data
+    ) external;
+
+    /**
+     * @dev Safely transfers `tokenId` token from `from` to `to`, checking first that contract recipients
+     * are aware of the ERC721 protocol to prevent tokens from being forever locked.
+     *
+     * Requirements:
+     *
+     * - `from` cannot be the zero address.
+     * - `to` cannot be the zero address.
+     * - `tokenId` token must exist and be owned by `from`.
+     * - If the caller is not `from`, it must be have been allowed to move this token by either {approve} or {setApprovalForAll}.
+     * - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer.
+     *
+     * Emits a {Transfer} event.
+     */
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) external;
+
+    /**
+     * @dev Transfers `tokenId` token from `from` to `to`.
+     *
+     * WARNING: Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
+     *
+     * Requirements:
+     *
+     * - `from` cannot be the zero address.
+     * - `to` cannot be the zero address.
+     * - `tokenId` token must be owned by `from`.
+     * - If the caller is not `from`, it must be approved to move this token by either {approve} or {setApprovalForAll}.
+     *
+     * Emits a {Transfer} event.
+     */
+    function transferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) external;
+
+    /**
+     * @dev Gives permission to `to` to transfer `tokenId` token to another account.
+     * The approval is cleared when the token is transferred.
+     *
+     * Only a single account can be approved at a time, so approving the zero address clears previous approvals.
+     *
+     * Requirements:
+     *
+     * - The caller must own the token or be an approved operator.
+     * - `tokenId` must exist.
+     *
+     * Emits an {Approval} event.
+     */
+    function approve(address to, uint256 tokenId) external;
+
+    /**
+     * @dev Approve or remove `operator` as an operator for the caller.
+     * Operators can call {transferFrom} or {safeTransferFrom} for any token owned by the caller.
+     *
+     * Requirements:
+     *
+     * - The `operator` cannot be the caller.
+     *
+     * Emits an {ApprovalForAll} event.
+     */
+    function setApprovalForAll(address operator, bool _approved) external;
+
+    /**
+     * @dev Returns the account approved for `tokenId` token.
+     *
+     * Requirements:
+     *
+     * - `tokenId` must exist.
+     */
+    function getApproved(uint256 tokenId)
+        external
+        view
+        returns (address operator);
+
+    /**
+     * @dev Returns if the `operator` is allowed to manage all of the assets of `owner`.
+     *
+     * See {setApprovalForAll}
+     */
+    function isApprovedForAll(address owner, address operator)
+        external
+        view
+        returns (bool);
+}
+
+/**
+ * @title ERC721 token receiver interface
+ * @dev Interface for any contract that wants to support safeTransfers
+ * from ERC721 asset contracts.
+ */
+interface IERC721Receiver {
+    /**
+     * @dev Whenever an {IERC721} `tokenId` token is transferred to this contract via {IERC721-safeTransferFrom}
+     * by `operator` from `from`, this function is called.
+     *
+     * It must return its Solidity selector to confirm the token transfer.
+     * If any other value is returned or the interface is not implemented by the recipient, the transfer will be reverted.
+     *
+     * The selector can be obtained in Solidity with `IERC721Receiver.onERC721Received.selector`.
+     */
+    function onERC721Received(
+        address operator,
+        address from,
+        uint256 tokenId,
+        bytes calldata data
+    ) external returns (bytes4);
+}
+
+/**
+ * @title ERC-721 Non-Fungible Token Standard, optional metadata extension
+ * @dev See https://eips.ethereum.org/EIPS/eip-721
+ */
+interface IERC721Metadata is IERC721 {
+    /**
+     * @dev Returns the token collection name.
+     */
+    function name() external view returns (string memory);
+
+    /**
+     * @dev Returns the token collection symbol.
+     */
+    function symbol() external view returns (string memory);
+
+    /**
+     * @dev Returns the Uniform Resource Identifier (URI) for `tokenId` token.
+     */
+    function tokenURI(uint256 tokenId) external view returns (string memory);
+}
+
+/**
+ * @dev Provides information about the current execution context, including the
+ * sender of the transaction and its data. While these are generally available
+ * via msg.sender and msg.data, they should not be accessed in such a direct
+ * manner, since when dealing with meta-transactions the account sending and
+ * paying for execution may not be the actual sender (as far as an application
+ * is concerned).
+ *
+ * This contract is only required for intermediate, library-like contracts.
+ */
+abstract contract Context {
+    function _msgSender() internal view virtual returns (address) {
+        return msg.sender;
+    }
+}
+
+/**
+ * @dev Implementation of the {IERC165} interface.
+ *
+ * Contracts that want to implement ERC165 should inherit from this contract and override {supportsInterface} to check
+ * for the additional interface id that will be supported. For example:
+ *
+ * ```solidity
+ * function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
+ *     return interfaceId == type(MyInterface).interfaceId || super.supportsInterface(interfaceId);
+ * }
+ * ```
+ *
+ * Alternatively, {ERC165Storage} provides an easier to use but more expensive implementation.
+ */
 abstract contract ERC165 is IERC165 {
     /**
      * @dev See {IERC165-supportsInterface}.
@@ -490,6 +394,11 @@ abstract contract ERC165 is IERC165 {
     }
 }
 
+/**
+ * @dev Implementation of https://eips.ethereum.org/EIPS/eip-721[ERC721] Non-Fungible Token Standard, including
+ * the Metadata extension, but not including the Enumerable extension, which is available separately as
+ * {ERC721Enumerable}.
+ */
 contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     using Address for address;
     using Strings for uint256;
@@ -512,11 +421,17 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     // Mapping from owner to operator approvals
     mapping(address => mapping(address => bool)) private _operatorApprovals;
 
+    /**
+     * @dev Initializes the contract by setting a `name` and a `symbol` to the token collection.
+     */
     constructor(string memory name_, string memory symbol_) {
         _name = name_;
         _symbol = symbol_;
     }
 
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
     function supportsInterface(bytes4 interfaceId)
         public
         view
@@ -530,6 +445,9 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
             super.supportsInterface(interfaceId);
     }
 
+    /**
+     * @dev See {IERC721-balanceOf}.
+     */
     function balanceOf(address owner)
         public
         view
@@ -544,6 +462,9 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         return _balances[owner];
     }
 
+    /**
+     * @dev See {IERC721-ownerOf}.
+     */
     function ownerOf(uint256 tokenId)
         public
         view
@@ -559,16 +480,25 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         return owner;
     }
 
-    function name() public view virtual override returns (string memory) {
+    /**
+     * @dev See {IERC721Metadata-name}.
+     */
+    function name() external view virtual override returns (string memory) {
         return _name;
     }
 
-    function symbol() public view virtual override returns (string memory) {
+    /**
+     * @dev See {IERC721Metadata-symbol}.
+     */
+    function symbol() external view virtual override returns (string memory) {
         return _symbol;
     }
 
+    /**
+     * @dev See {IERC721Metadata-tokenURI}.
+     */
     function tokenURI(uint256 tokenId)
-        public
+        external
         view
         virtual
         override
@@ -586,11 +516,19 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
                 : "";
     }
 
+    /**
+     * @dev Base URI for computing {tokenURI}. If set, the resulting URI for each
+     * token will be the concatenation of the `baseURI` and the `tokenId`. Empty
+     * by default, can be overridden in child contracts.
+     */
     function _baseURI() internal view virtual returns (string memory) {
         return "";
     }
 
-    function approve(address to, uint256 tokenId) public virtual override {
+    /**
+     * @dev See {IERC721-approve}.
+     */
+    function approve(address to, uint256 tokenId) external virtual override {
         address owner = ERC721.ownerOf(tokenId);
         require(to != owner, "ERC721: approval to current owner");
 
@@ -602,6 +540,9 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         _approve(to, tokenId);
     }
 
+    /**
+     * @dev See {IERC721-getApproved}.
+     */
     function getApproved(uint256 tokenId)
         public
         view
@@ -617,8 +558,11 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         return _tokenApprovals[tokenId];
     }
 
+    /**
+     * @dev See {IERC721-setApprovalForAll}.
+     */
     function setApprovalForAll(address operator, bool approved)
-        public
+        external
         virtual
         override
     {
@@ -628,6 +572,9 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         emit ApprovalForAll(_msgSender(), operator, approved);
     }
 
+    /**
+     * @dev See {IERC721-isApprovedForAll}.
+     */
     function isApprovedForAll(address owner, address operator)
         public
         view
@@ -638,11 +585,14 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         return _operatorApprovals[owner][operator];
     }
 
+    /**
+     * @dev See {IERC721-transferFrom}.
+     */
     function transferFrom(
         address from,
         address to,
         uint256 tokenId
-    ) public virtual override {
+    ) external virtual override {
         //solhint-disable-next-line max-line-length
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
@@ -652,14 +602,20 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         _transfer(from, to, tokenId);
     }
 
+    /**
+     * @dev See {IERC721-safeTransferFrom}.
+     */
     function safeTransferFrom(
         address from,
         address to,
         uint256 tokenId
-    ) public virtual override {
+    ) external virtual override {
         safeTransferFrom(from, to, tokenId, "");
     }
 
+    /**
+     * @dev See {IERC721-safeTransferFrom}.
+     */
     function safeTransferFrom(
         address from,
         address to,
@@ -673,6 +629,24 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         _safeTransfer(from, to, tokenId, _data);
     }
 
+    /**
+     * @dev Safely transfers `tokenId` token from `from` to `to`, checking first that contract recipients
+     * are aware of the ERC721 protocol to prevent tokens from being forever locked.
+     *
+     * `_data` is additional data, it has no specified format and it is sent in call to `to`.
+     *
+     * This internal function is equivalent to {safeTransferFrom}, and can be used to e.g.
+     * implement alternative mechanisms to perform token transfer, such as signature-based.
+     *
+     * Requirements:
+     *
+     * - `from` cannot be the zero address.
+     * - `to` cannot be the zero address.
+     * - `tokenId` token must exist and be owned by `from`.
+     * - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer.
+     *
+     * Emits a {Transfer} event.
+     */
     function _safeTransfer(
         address from,
         address to,
@@ -686,10 +660,25 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         );
     }
 
+    /**
+     * @dev Returns whether `tokenId` exists.
+     *
+     * Tokens can be managed by their owner or approved accounts via {approve} or {setApprovalForAll}.
+     *
+     * Tokens start existing when they are minted (`_mint`),
+     * and stop existing when they are burned (`_burn`).
+     */
     function _exists(uint256 tokenId) internal view virtual returns (bool) {
         return _owners[tokenId] != address(0);
     }
 
+    /**
+     * @dev Returns whether `spender` is allowed to manage `tokenId`.
+     *
+     * Requirements:
+     *
+     * - `tokenId` must exist.
+     */
     function _isApprovedOrOwner(address spender, uint256 tokenId)
         internal
         view
@@ -706,10 +695,24 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
             isApprovedForAll(owner, spender));
     }
 
+    /**
+     * @dev Safely mints `tokenId` and transfers it to `to`.
+     *
+     * Requirements:
+     *
+     * - `tokenId` must not exist.
+     * - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer.
+     *
+     * Emits a {Transfer} event.
+     */
     function _safeMint(address to, uint256 tokenId) internal virtual {
         _safeMint(to, tokenId, "");
     }
 
+    /**
+     * @dev Same as {xref-ERC721-_safeMint-address-uint256-}[`_safeMint`], with an additional `data` parameter which is
+     * forwarded in {IERC721Receiver-onERC721Received} to contract recipients.
+     */
     function _safeMint(
         address to,
         uint256 tokenId,
@@ -722,6 +725,18 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         );
     }
 
+    /**
+     * @dev Mints `tokenId` and transfers it to `to`.
+     *
+     * WARNING: Usage of this method is discouraged, use {_safeMint} whenever possible
+     *
+     * Requirements:
+     *
+     * - `tokenId` must not exist.
+     * - `to` cannot be the zero address.
+     *
+     * Emits a {Transfer} event.
+     */
     function _mint(address to, uint256 tokenId) internal virtual {
         require(to != address(0), "ERC721: mint to the zero address");
         require(!_exists(tokenId), "ERC721: token already minted");
@@ -734,20 +749,17 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         emit Transfer(address(0), to, tokenId);
     }
 
-    function _burn(uint256 tokenId) internal virtual {
-        address owner = ERC721.ownerOf(tokenId);
-
-        _beforeTokenTransfer(owner, address(0), tokenId);
-
-        // Clear approvals
-        _approve(address(0), tokenId);
-
-        _balances[owner] -= 1;
-        delete _owners[tokenId];
-
-        emit Transfer(owner, address(0), tokenId);
-    }
-
+    /**
+     * @dev Transfers `tokenId` from `from` to `to`.
+     *  As opposed to {transferFrom}, this imposes no restrictions on msg.sender.
+     *
+     * Requirements:
+     *
+     * - `to` cannot be the zero address.
+     * - `tokenId` token must be owned by `from`.
+     *
+     * Emits a {Transfer} event.
+     */
     function _transfer(
         address from,
         address to,
@@ -771,11 +783,26 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         emit Transfer(from, to, tokenId);
     }
 
+    /**
+     * @dev Approve `to` to operate on `tokenId`
+     *
+     * Emits a {Approval} event.
+     */
     function _approve(address to, uint256 tokenId) internal virtual {
         _tokenApprovals[tokenId] = to;
         emit Approval(ERC721.ownerOf(tokenId), to, tokenId);
     }
 
+    /**
+     * @dev Internal function to invoke {IERC721Receiver-onERC721Received} on a target address.
+     * The call is not executed if the target address is not a contract.
+     *
+     * @param from address representing the previous owner of the given token ID
+     * @param to target address that will receive the tokens
+     * @param tokenId uint256 ID of the token to be transferred
+     * @param _data bytes optional data to send along with the call
+     * @return bool whether the call correctly returned the expected magic value
+     */
     function _checkOnERC721Received(
         address from,
         address to,
@@ -808,6 +835,20 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         }
     }
 
+    /**
+     * @dev Hook that is called before any token transfer. This includes minting
+     * and burning.
+     *
+     * Calling conditions:
+     *
+     * - When `from` and `to` are both non-zero, ``from``'s `tokenId` will be
+     * transferred to `to`.
+     * - When `from` is zero, `tokenId` will be minted for `to`.
+     * - When `to` is zero, ``from``'s `tokenId` will be burned.
+     * - `from` and `to` are never both zero.
+     *
+     * To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks].
+     */
     function _beforeTokenTransfer(
         address from,
         address to,
@@ -815,6 +856,10 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     ) internal virtual {}
 }
 
+/**
+ * @title ERC-721 Non-Fungible Token Standard, optional enumeration extension
+ * @dev See https://eips.ethereum.org/EIPS/eip-721
+ */
 interface IERC721Enumerable is IERC721 {
     /**
      * @dev Returns the total amount of tokens stored by the contract.
@@ -837,6 +882,11 @@ interface IERC721Enumerable is IERC721 {
     function tokenByIndex(uint256 index) external view returns (uint256);
 }
 
+/**
+ * @dev This implements an optional extension of {ERC721} defined in the EIP that adds
+ * enumerability of all the token ids in the contract as well as all token ids owned by each
+ * account.
+ */
 abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
     // Mapping from owner to list of owned token IDs
     mapping(address => mapping(uint256 => uint256)) private _ownedTokens;
@@ -850,6 +900,9 @@ abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
     // Mapping from token id to position in the allTokens array
     mapping(uint256 => uint256) private _allTokensIndex;
 
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
     function supportsInterface(bytes4 interfaceId)
         public
         view
@@ -862,6 +915,9 @@ abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
             super.supportsInterface(interfaceId);
     }
 
+    /**
+     * @dev See {IERC721Enumerable-tokenOfOwnerByIndex}.
+     */
     function tokenOfOwnerByIndex(address owner, uint256 index)
         public
         view
@@ -876,12 +932,18 @@ abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
         return _ownedTokens[owner][index];
     }
 
+    /**
+     * @dev See {IERC721Enumerable-totalSupply}.
+     */
     function totalSupply() public view virtual override returns (uint256) {
         return _allTokens.length;
     }
 
+    /**
+     * @dev See {IERC721Enumerable-tokenByIndex}.
+     */
     function tokenByIndex(uint256 index)
-        public
+        external
         view
         virtual
         override
@@ -894,6 +956,21 @@ abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
         return _allTokens[index];
     }
 
+    /**
+     * @dev Hook that is called before any token transfer. This includes minting
+     * and burning.
+     *
+     * Calling conditions:
+     *
+     * - When `from` and `to` are both non-zero, ``from``'s `tokenId` will be
+     * transferred to `to`.
+     * - When `from` is zero, `tokenId` will be minted for `to`.
+     * - When `to` is zero, ``from``'s `tokenId` will be burned.
+     * - `from` cannot be the zero address.
+     * - `to` cannot be the zero address.
+     *
+     * To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks].
+     */
     function _beforeTokenTransfer(
         address from,
         address to,
@@ -913,6 +990,11 @@ abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
         }
     }
 
+    /**
+     * @dev Private function to add a token to this extension's ownership-tracking data structures.
+     * @param to address representing the new owner of the given token ID
+     * @param tokenId uint256 ID of the token to be added to the tokens list of the given address
+     */
     function _addTokenToOwnerEnumeration(address to, uint256 tokenId) private {
         uint256 length = ERC721.balanceOf(to);
         _ownedTokens[to][length] = tokenId;
@@ -928,6 +1010,14 @@ abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
         _allTokens.push(tokenId);
     }
 
+    /**
+     * @dev Private function to remove a token from this extension's ownership-tracking data structures. Note that
+     * while the token is not assigned a new owner, the `_ownedTokensIndex` mapping is _not_ updated: this allows for
+     * gas optimizations e.g. when performing a transfer operation (avoiding double writes).
+     * This has O(1) time complexity, but alters the order of the _ownedTokens array.
+     * @param from address representing the previous owner of the given token ID
+     * @param tokenId uint256 ID of the token to be removed from the tokens list of the given address
+     */
     function _removeTokenFromOwnerEnumeration(address from, uint256 tokenId)
         private
     {
@@ -950,6 +1040,11 @@ abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
         delete _ownedTokens[from][lastTokenIndex];
     }
 
+    /**
+     * @dev Private function to remove a token from this extension's token tracking data structures.
+     * This has O(1) time complexity, but alters the order of the _allTokens array.
+     * @param tokenId uint256 ID of the token to be removed from the tokens list
+     */
     function _removeTokenFromAllTokensEnumeration(uint256 tokenId) private {
         // To prevent a gap in the tokens array, we store the last token in the index of the token to delete, and
         // then delete the last slot (swap and pop).
@@ -971,6 +1066,18 @@ abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
     }
 }
 
+/**
+ * @dev Contract module which provides a basic access control mechanism, where
+ * there is an account (an owner) that can be granted exclusive access to
+ * specific functions.
+ *
+ * By default, the owner account will be the one that deploys the contract. This
+ * can later be changed with {transferOwnership}.
+ *
+ * This module is used through inheritance. It will make available the modifier
+ * `onlyOwner`, which can be applied to your functions to restrict their use to
+ * the owner.
+ */
 abstract contract Ownable is Context {
     address private _owner;
 
@@ -979,24 +1086,44 @@ abstract contract Ownable is Context {
         address indexed newOwner
     );
 
+    /**
+     * @dev Initializes the contract setting the deployer as the initial owner.
+     */
     constructor() {
         _setOwner(_msgSender());
     }
 
+    /**
+     * @dev Returns the address of the current owner.
+     */
     function owner() public view virtual returns (address) {
         return _owner;
     }
 
+    /**
+     * @dev Throws if called by any account other than the owner.
+     */
     modifier onlyOwner() {
         require(owner() == _msgSender(), "Ownable: caller is not the owner");
         _;
     }
 
-    function renounceOwnership() public virtual onlyOwner {
+    /**
+     * @dev Leaves the contract without owner. It will not be possible to call
+     * `onlyOwner` functions anymore. Can only be called by the current owner.
+     *
+     * NOTE: Renouncing ownership will leave the contract without an owner,
+     * thereby removing any functionality that is only available to the owner.
+     */
+    function renounceOwnership() external virtual onlyOwner {
         _setOwner(address(0));
     }
 
-    function transferOwnership(address newOwner) public virtual onlyOwner {
+    /**
+     * @dev Transfers ownership of the contract to a new account (`newOwner`).
+     * Can only be called by the current owner.
+     */
+    function transferOwnership(address newOwner) external virtual onlyOwner {
         require(
             newOwner != address(0),
             "Ownable: new owner is the zero address"
@@ -1004,6 +1131,10 @@ abstract contract Ownable is Context {
         _setOwner(newOwner);
     }
 
+    /**
+     * @dev Transfers ownership of the contract to a new account (`newOwner`).
+     * Internal function without access restriction.
+     */
     function _setOwner(address newOwner) private {
         address oldOwner = _owner;
         _owner = newOwner;
@@ -1011,40 +1142,60 @@ abstract contract Ownable is Context {
     }
 }
 
-contract ZaidanNFT is ERC721Enumerable, Ownable {
+/**
+* @dev Contract Module for AlphaOctopusNFT
+ */
+contract ThisNFTisCrap is ERC721Enumerable, Ownable {
     using SafeMath for uint256;
     using Counters for Counters.Counter;
+    using Strings for uint256;
 
     Counters.Counter private _tokenIdTracker;
 
-    uint256 public constant MAX_ELEMENTS = 5500;
-    uint256 public PRICE = 4700000000000000000; // 4.7 AVAX 
-    uint256 public PRESALE_PRICE = 2850000000000000000; //2.85 AVAX
-    uint256 public constant MAX_BY_MINT_WHITELIST = 2;
-    uint256 public constant MAX_BY_MINT = 6;
-    uint256 public constant MAX_BY_MINT_POST_24_HRS = 10;
-    uint256 public MAX_RESERVE_COUNT = 300;
-    uint256 public SALE_START = 1662688800; // September 9, 2022, 02:00:00 GMT
-    uint256 public PRESALE_START = 1662602400; // September 8, 2022, 02:00:00 GMT
-    uint256 public secondsInDay = 60 * 60 * 24;
-    address public _multisig = 0xFb16412cC5522F8214Da686375f5D46030028D51;
+    uint256 public constant MAX_ELEMENTS = 10000;
+    uint256 public PRICE = 13 * 10**15; // 0.013 ETH
+    uint256 public PRESALE_PRICE = 1 * 10**16; //0.01 ETH
+    uint256 public constant MAX_BY_MINT = 5;
+    uint256 public constant MAX_BY_MINT_WHITELIST = 3;
+    uint256 public MAX_RESERVE_COUNT = 10;
+    uint256 public SALE_START = 1663977600; //Saturday, September 24, 2022, 00:00:00 UTC
+    uint256 public PRESALE_START = 1663718400; //Wednesday, September 21, 2022, 00:00:00 UTC
+
     bool public isPaused = false;
+    bool public isRevealed = false;
 
     mapping(address => bool) private _whiteList;
     mapping(address => uint256) private _whiteListClaimed;
     mapping(address => uint256) private _generalClaimed;
     uint256 private _reservedCount = 0;
-    uint256 private _reserveAtATime = 50;
+    uint256 private _reserveAtATime = 5;
 
+    string private notRevealedtokenUri =
+        "ipfs://QmXPhuChwPLLD4k5s71fZnk5vUgb9N3oKZHy3WfcdebZT6";
     string public baseTokenURI;
+    string private _contractURI = "ipfs://QmbNt94XPHysGy9dmxFSifZxzEKtvDYTK33AfCtg61PXc8";
 
-    event CreateZaidanClanNFT(uint256 indexed id);
 
-    constructor(string memory baseURI) ERC721("Zaidan Clan NFT", "ZCN") {
+    event CreateCrapNFT(uint256 indexed id);
+    event PresaleTimeChanged(uint256 indexed newTimestamp);
+    event PresalePriceChanged(uint256 indexed newPrice);
+    event SaleTimeChanged(uint256 indexed newTimestamp);
+    event SalePriceChanged(uint256 indexed newPrice);
+
+    /**
+    * @dev Contract connstructor
+    * @param baseURI the base uri of the metadata 
+    * e.g. ipfs://<metadata-ipfs-cid>/
+     */
+    constructor(string memory baseURI) ERC721("ThisNFTisCrap", "$hit") {
         setBaseURI(baseURI);
         _tokenIdTracker.increment();
     }
 
+    /**
+    * @dev access modifier to allow execution of a function call only 
+    * when sale open time is elapsed
+     */
     modifier saleIsOpen() {
         if (_msgSender() != owner()) {
             require(SALE_START < block.timestamp, "Sale is not open");
@@ -1052,6 +1203,14 @@ contract ZaidanNFT is ERC721Enumerable, Ownable {
         _;
     }
 
+    function contractURI() public view returns (string memory) {
+        return _contractURI;
+    }
+
+    /**
+    * @dev access modifier to allow execution of a function call only 
+    * when presale open time is elapsed
+     */
     modifier preSaleIsOpen() {
         if (_msgSender() != owner()) {
             require(PRESALE_START < block.timestamp, "Pre Sale is not open");
@@ -1060,21 +1219,34 @@ contract ZaidanNFT is ERC721Enumerable, Ownable {
         _;
     }
 
+    /**
+    * @dev method to check presale whether is open
+     */
     function isPresaleOpen() external view returns (bool) {
         if (PRESALE_START < block.timestamp && SALE_START > block.timestamp)
             return true;
         else return false;
     }
 
+    /**
+    * @dev private method for total mint tracker value
+     */
     function _totalSupply() internal view returns (uint256) {
         return _tokenIdTracker.current();
     }
 
-    function totalMint() public view returns (uint256) {
+    /**
+    * @dev public method for total mint tracker value
+     */
+    function totalMint() external view returns (uint256) {
         return _totalSupply();
     }
 
-    function reserveTokens() public onlyOwner {
+    /**
+    * @dev external method to mint team tokens to contract owner wallet
+    * accessible by only owner of the contract
+     */
+    function reserveTokens() external onlyOwner {
         require(
             _reservedCount + _reserveAtATime <= MAX_RESERVE_COUNT,
             "Max reserve exceeded"
@@ -1086,49 +1258,48 @@ contract ZaidanNFT is ERC721Enumerable, Ownable {
         }
     }
 
-    function mint(uint256 _count) public payable saleIsOpen {
+    /**
+    * @dev general sale mint method
+    * accessible only while sale is open and running
+    * @param _count number of nfts to mint
+     */
+    function mint(uint256 _count) external payable saleIsOpen {
         uint256 total = _tokenIdTracker.current().sub(1);
         require(total + _count <= MAX_ELEMENTS, "Max limit");
-        require(total <= MAX_ELEMENTS, "All Zaidan Clan NFT's are sold out");
+        require(total <= MAX_ELEMENTS, "All  NFT's are sold out");
+        require(_count <= MAX_BY_MINT, "Exceeds allowed NFT's per transaction");
         require(!isPaused, "Sale is Paused.");
-        if (block.timestamp.sub(SALE_START) <= secondsInDay) {
-            require(
-                _count <= MAX_BY_MINT,
-                "Exceeds allowed NFT's per transaction"
-            );
-            require(
-                _generalClaimed[_msgSender()] + _count <= MAX_BY_MINT,
-                "Exceeds your minting quota."
-            );
-        } else {
-            require(
-                _count <= MAX_BY_MINT_POST_24_HRS,
-                "Exceeds allowed NFT's per transaction"
-            );
-        }
-
+        require(
+            _generalClaimed[_msgSender()] + _count <= MAX_BY_MINT,
+            "Exceeds your minting quota."
+        );
         require(msg.value >= salePrice(_count), "Value below price");
 
         for (uint256 i = 0; i < _count; i++) {
             _generalClaimed[_msgSender()] += 1;
             _mintAnElement(_msgSender());
         }
-        _withdraw(_multisig, address(this).balance);
+        _withdraw(owner(), address(this).balance);
     }
 
-    function presaleMint(uint256 _count) public payable preSaleIsOpen {
+    /**
+    * @dev pre sale mint method
+    * accesseble only while presale is open and running
+    * @param _count number of nfts to mint
+     */
+    function presaleMint(uint256 _count) external payable preSaleIsOpen {
         require(_whiteList[msg.sender], "You are not in whitelist");
         require(
             _count <= MAX_BY_MINT_WHITELIST,
-            "Maximum of 2 allowed per transaction."
+            "Maximum of 3 allowed per transaction."
         );
         require(
             _whiteListClaimed[msg.sender] + _count <= MAX_BY_MINT_WHITELIST,
-            "Purchase exceeds max allowed"
+            "Exceeds your whitelist minting quota."
         );
         uint256 total = _tokenIdTracker.current().sub(1);
         require(total + _count <= MAX_ELEMENTS, "Max limit");
-        require(total <= MAX_ELEMENTS, "All Zaidan Clan NFT's are sold out");
+        require(total <= MAX_ELEMENTS, "All NFT's are sold out");
         require(msg.value >= presalePrice(_count), "Value below price");
         require(!isPaused, "Sale is Paused.");
 
@@ -1136,10 +1307,15 @@ contract ZaidanNFT is ERC721Enumerable, Ownable {
             _whiteListClaimed[msg.sender] += 1;
             _mintAnElement(msg.sender);
         }
-        _withdraw(_multisig, address(this).balance);
+        _withdraw(owner(), address(this).balance);
     }
 
-    function airdropNFT(address[] memory winners) public onlyOwner {
+    /**
+    * @dev airdrop nft's to multiple wallet address at once
+    * accessible by only owner of the contract
+    * @param winners array of wallet address 
+     */
+    function airdropNFT(address[] memory winners) external onlyOwner {
         uint256 total = _tokenIdTracker.current().sub(1);
         require(total + winners.length <= MAX_ELEMENTS, "Max limit");
         require(
@@ -1151,31 +1327,63 @@ contract ZaidanNFT is ERC721Enumerable, Ownable {
         }
     }
 
+    /**
+    * @dev private method to mint a nft
+    * @param _to wallet address of nft receiver
+     */
     function _mintAnElement(address _to) private {
         uint256 id = _totalSupply();
         _tokenIdTracker.increment();
         _safeMint(_to, id);
-        emit CreateZaidanClanNFT(id);
+        emit CreateCrapNFT(id);
     }
 
+    /**
+    * @dev reveal the collection
+    * accessible by only owner of the contract
+     */
+    function revealCollection() external onlyOwner {
+        isRevealed = true;
+    }
+
+    /**
+    * @dev gets the  sale price for requested number of tokens
+    * @param _count number of tokens
+     */
     function salePrice(uint256 _count) public view returns (uint256) {
         return PRICE.mul(_count);
     }
 
+    /**
+    * @dev gets the  presale price for requested number of tokens
+    * @param _count number of tokens
+     */
     function presalePrice(uint256 _count) public view returns (uint256) {
         return PRESALE_PRICE.mul(_count);
     }
 
+    /**
+    * @dev base uri of the metadata
+     */
     function _baseURI() internal view virtual override returns (string memory) {
         return baseTokenURI;
     }
 
+    /**
+    * @dev sets the base uri of the metadata
+    * accessible by only owner of the contract
+    * @param baseURI base ipfs uri of the metadata 
+     */
     function setBaseURI(string memory baseURI) public onlyOwner {
         baseTokenURI = baseURI;
     }
 
+    /**
+    * @dev returns the metadata uri of the requested token
+    * @param tokenId id of the requested token
+     */
     function tokenURI(uint256 tokenId)
-        public
+        external
         view
         virtual
         override
@@ -1189,19 +1397,26 @@ contract ZaidanNFT is ERC721Enumerable, Ownable {
         uint256 metaId = tokenId;
         string memory uriSuffix = ".json";
         string memory currentBaseURI = _baseURI();
-
-        return
-            bytes(currentBaseURI).length > 0
-                ? string(
-                    abi.encodePacked(
-                        currentBaseURI,
-                        uint2str(metaId),
-                        uriSuffix
+        if (isRevealed) {
+            return
+                bytes(currentBaseURI).length > 0
+                    ? string(
+                        abi.encodePacked(
+                            currentBaseURI,
+                            metaId.toString(),
+                            uriSuffix
+                        )
                     )
-                )
-                : "";
+                    : "";
+        } else {
+            return string(abi.encodePacked(notRevealedtokenUri));
+        }
     }
 
+    /**
+    * @dev returns all the id of tokens hold by an account
+    * @param _owner wallet address
+     */
     function walletOfOwner(address _owner)
         external
         view
@@ -1217,30 +1432,67 @@ contract ZaidanNFT is ERC721Enumerable, Ownable {
         return tokensId;
     }
 
+    /**
+    * @dev sets the presale start timestamp
+    * accessible by only owner of the contract
+    * @param _presaleTime timestamp of presale start 
+     */
     function setPresaleTime(uint256 _presaleTime) external onlyOwner {
         PRESALE_START = _presaleTime;
+        emit PresaleTimeChanged(_presaleTime);
     }
 
+    /**
+    * @dev sets the sale start timestamp
+    * accessible by only owner of the contract
+    * @param _saleTime timestamp of sale start 
+     */
     function setSaleTime(uint256 _saleTime) external onlyOwner {
         SALE_START = _saleTime;
+        emit SaleTimeChanged(_saleTime);
     }
 
+    /**
+    * @dev pauses the token minting
+    * accessible by only owner of the contract
+     */
     function pauseMinting() external onlyOwner {
         isPaused = true;
     }
 
+    /**
+    * @dev resumes the token minting
+    * accessible by only owner of the contract
+     */
     function resumeMinting() external onlyOwner {
         isPaused = false;
     }
 
+    /**
+    * @dev sets the presale price
+    * accessible by only owner of the contract
+    * @param _price token price of presale  
+     */
     function setPresalePrice(uint256 _price) external onlyOwner {
         PRESALE_PRICE = _price;
+        emit PresalePriceChanged(_price);
     }
 
+    /**
+    * @dev sets the sale price
+    * accessible by only owner of the contract
+    * @param _price token price of sale  
+     */
     function setSalePrice(uint256 _price) external onlyOwner {
         PRICE = _price;
+        emit SalePriceChanged(_price);
     }
 
+    /**
+    * @dev add multiple addresses to the whitelist
+    * accessible by only owner of the contract
+    * @param addresses array of addresses to add 
+     */
     function addToWhiteList(address[] calldata addresses) external onlyOwner {
         for (uint256 i = 0; i < addresses.length; i++) {
             require(addresses[i] != address(0), "Null address found");
@@ -1252,10 +1504,19 @@ contract ZaidanNFT is ERC721Enumerable, Ownable {
         }
     }
 
+    /**
+    * @dev check whether an address is whitelisted
+    * @param addr address to be checked
+     */
     function addressInWhitelist(address addr) external view returns (bool) {
         return _whiteList[addr];
     }
 
+    /**
+    * @dev remove multiple addresses from whitelist
+    * accessible by only owner of the contract
+    * @param addresses array of addresses to remove 
+     */
     function removeFromWhiteList(address[] calldata addresses)
         external
         onlyOwner
@@ -1267,47 +1528,40 @@ contract ZaidanNFT is ERC721Enumerable, Ownable {
         }
     }
 
-    function setReserveAtATime(uint256 _count) public onlyOwner {
+    /**
+    * @dev sets the number of team tokens that can be minted in single transaction
+    * accessible by only owner of the contract
+    * @param _count number of tokens
+     */
+    function setReserveAtATime(uint256 _count) external onlyOwner {
         _reserveAtATime = _count;
     }
 
+    /**
+    * @dev sets the max tokens that can be reserved for the team
+    * accessible by only owner of the contract
+    * @param _newCount number of tokens 
+     */
     function setMaxReserveCount(uint256 _newCount) external onlyOwner {
         MAX_RESERVE_COUNT = _newCount;
     }
 
+    /**
+    * @dev withdraws eth balance of the contract to contract owner
+    * accessible by only owner of the contract
+     */
     function withdrawAll() external onlyOwner {
         uint256 balance = address(this).balance;
         require(balance > 0);
-        _withdraw(_multisig, balance);
+        _withdraw(owner(), balance);
     }
 
+    /**
+    * @dev private method to transfer  eth amount 
+    * @param _address address of the receiver
+    * @param _amount eth amount in gwei
+     */
     function _withdraw(address _address, uint256 _amount) private {
         payable(_address).transfer(_amount);
-    }
-
-    function uint2str(uint256 _i)
-        internal
-        pure
-        returns (string memory _uintAsString)
-    {
-        if (_i == 0) {
-            return "0";
-        }
-        uint256 j = _i;
-        uint256 len;
-        while (j != 0) {
-            len++;
-            j /= 10;
-        }
-        bytes memory bstr = new bytes(len);
-        uint256 k = len;
-        while (_i != 0) {
-            k = k - 1;
-            uint8 temp = (48 + uint8(_i - (_i / 10) * 10));
-            bytes1 b1 = bytes1(temp);
-            bstr[k] = b1;
-            _i /= 10;
-        }
-        return string(bstr);
     }
 }

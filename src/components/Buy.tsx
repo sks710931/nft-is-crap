@@ -37,7 +37,7 @@ export const Buy = () => {
           };
           const txResult = await contract.presaleMint(value, overRides);
           await txResult.wait();
-          alert(`${value} Zaidan Clan NFT's minted successfully!`);
+          alert(`${value} ThisNFTisCrap NFT's minted successfully!`);
         } else {
           const contract = new Contract(NFTContract, abi, signer);
           let overRides = {
@@ -45,20 +45,20 @@ export const Buy = () => {
           };
           const txResult = await contract.mint(value, overRides);
           await txResult.wait();
-          alert(`${value} Zaidan Clan NFT's minted successfully!`);
+          alert(`${value} ThisNFTisCrap NFT's minted successfully!`);
         }
       } catch (err: any) {
         if (err.data) {
-          if (err.data.code === -32000) {
+          if (err.code === -32000) {
             alert("Insufficient Funds");
           } else {
-            alert(err.data.message);
+            alert(err.message);
             console.log(err.code);
           }
         } else {
           if (err.code === 4001) {
             alert("User denied transaction signature.");
-          } else alert("Transaction Error");
+          } else alert(err.error.message);
         }
       }
     }
@@ -149,7 +149,7 @@ export const Buy = () => {
           variant="contained"
         >
           {" "}
-          Mint Zaidan Clan NFT
+          Mint NFT
         </Button>
       </div>
     </>
