@@ -1155,8 +1155,8 @@ contract ThisNFTisCrap is ERC721Enumerable, Ownable {
     uint256 public constant MAX_ELEMENTS = 10000;
     uint256 public PRICE = 13 * 10**15; // 0.013 ETH
     uint256 public PRESALE_PRICE = 1 * 10**16; //0.01 ETH
-    uint256 public constant MAX_BY_MINT = 5;
-    uint256 public constant MAX_BY_MINT_WHITELIST = 3;
+    uint256 public constant MAX_BY_MINT = 10;
+    uint256 public constant MAX_BY_MINT_WHITELIST = 5;
     uint256 public MAX_RESERVE_COUNT = 10;
     uint256 public SALE_START = 1663977600; //Saturday, September 24, 2022, 00:00:00 UTC
     uint256 public PRESALE_START = 1663718400; //Wednesday, September 21, 2022, 00:00:00 UTC
