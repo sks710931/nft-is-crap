@@ -41,7 +41,7 @@ export const Salecard = () => {
           variant="text"
           color="primary"
           endIcon={<OpenInNewIcon />}
-          onClick={() => window.open(`https://snowtrace.io/token/${NFTContract}`, "_blank")}
+          onClick={() => window.open(`https://etherscan.io/token/${NFTContract}`, "_blank")}
         >
           NFT Contract
         </Button>
